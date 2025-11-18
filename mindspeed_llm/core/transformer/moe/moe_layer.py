@@ -70,6 +70,7 @@ def moe_layer_init_wrapper(init_func):
                 self.shared_experts = MLP(shared_expert_config, MLPSubmodules(linear_fc1=ColumnParallelLinear, linear_fc2=RowParallelLinear), shared_expert=True)
             else:
                 from megatron.core.tensor_parallel import ColumnParallelLinear, RowParallelLinear
+                print("reach moe_layer_init_wrapper with shared_expert: True")
                 self.shared_experts = MLP(shared_expert_config, MLPSubmodules(linear_fc1=ColumnParallelLinear, linear_fc2=RowParallelLinear))
 
             # For using layer_number when recompute activation function is enabled.

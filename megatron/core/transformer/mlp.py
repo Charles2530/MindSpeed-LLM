@@ -63,7 +63,7 @@ class MLP(MegatronModule):
         ffn_hidden_size = self.config.ffn_hidden_size
         if self.config.gated_linear_unit:
             ffn_hidden_size *= 2
-
+        print("reach mlp linear_fc1 with mxfp_quant: False")
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
             self.input_size,
@@ -75,10 +75,12 @@ class MLP(MegatronModule):
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
+            mxfp_quant=False,
         )
 
         self.activation_func = self.config.activation_func
 
+        print("reach mlp linear_fc2 with mxfp_quant: True")
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
             self.config.ffn_hidden_size,
@@ -90,6 +92,7 @@ class MLP(MegatronModule):
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
+            mxfp_quant=True,
         )
 
     def forward(self, hidden_states):

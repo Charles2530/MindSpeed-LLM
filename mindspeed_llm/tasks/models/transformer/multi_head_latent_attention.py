@@ -239,6 +239,8 @@ class MultiHeadLatentAttention(SelfAttention):
         """
         Do patch for repeating KV so that GQA+Ulysses is better supported.
         """
+        print("reach multi_head_latent_attention forward")
+        import pdb;pdb.set_trace()
         args = get_args()
 
         def mla_attention(hidden_states):
