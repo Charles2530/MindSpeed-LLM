@@ -116,7 +116,7 @@ class GPTModel(LanguageModule):
             else:
                 self.embedding_activation_buffer = None
                 self.grad_output_buffer = None
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
             self.output_layer = tensor_parallel.ColumnParallelLinear(
                 config.hidden_size,
                 self.vocab_size,
