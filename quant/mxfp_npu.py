@@ -573,40 +573,43 @@ def mxfp_baddbmm(input, batch1, batch2, beta=1.0, alpha=1.0,
                  elem_format='fp8_e5m2', block_size=32):
     return MXFPBAddBmm.apply(input, batch1, batch2, beta, alpha, elem_format, block_size)
 
-# def mxfp_matmul(A:torch.Tensor,B:torch.Tensor,elem_format:str='fp8_e5m2',block_size:int=32)->torch.Tensor:
-#     scale_bits = 8
-#     # elem_format = 'fp8_e5m2'
-#     A = _quantize_mx(
-#         A,
-#         scale_bits,
-#         elem_format,
-#         shared_exp_method="max",
-#         axes=-1,
-#         block_size=block_size,
-#         round="nearest",
-#         flush_fp32_subnorms=False,
-#     )
-
-#     B = _quantize_mx(
-#         B,
-#         scale_bits,
-#         elem_format,
-#         shared_exp_method="max",
-#         axes=-2,
-#         block_size=block_size,
-#         round="nearest",
-#         flush_fp32_subnorms=False,
-#     )
-#     C = torch.matmul(A, B)
-#     return C
-
-# def mxfp_baddbmm(input: torch.Tensor, batch1: torch.Tensor, batch2: torch.Tensor, *, beta: float=1.0, alpha: float=1.0,elem_format:str='fp8_e5m2',block_size:int=32 ) -> torch.Tensor: 
-#     """
-#     out=beta * input + alpha * batch1 @ batch2
-#     """
-#     mm_out = mxfp_matmul(A=batch1,B=batch2,elem_format=elem_format,block_size=block_size)
-#     out = beta * input + alpha * mm_out
-#     return out
+def quant_dequant_qkv(q,k,v,elem_format='fp8_e5m2'):
+    scale_bits = 8
+    q_temp,k_temp,v_temp = q.clone(),k.clone(),v.clone()
+    q_temp = _quantize_mx(
+        q_temp.detach(),
+        scale_bits,
+        elem_format,
+        shared_exp_method="max",
+        axes=-1,
+        block_size=16,
+        round="nearest",
+        flush_fp32_subnorms=False,
+    )
+    k_temp = _quantize_mx(
+        k_temp.detach(),
+        scale_bits,
+        elem_format,
+        shared_exp_method="max",
+        axes=-1,
+        block_size=16,
+        round="nearest",
+        flush_fp32_subnorms=False,
+    )
+    v_temp = _quantize_mx(
+        v_temp.detach(),
+        scale_bits,
+        elem_format,
+        shared_exp_method="max",
+        axes=-1,
+        block_size=16,
+        round="nearest",
+        flush_fp32_subnorms=False,
+    )
+    final_q = q + (q_temp - q.detach())
+    final_k = k + (k_temp - k.detach())
+    final_v = v + (v_temp - v.detach())
+    return final_q,final_k,final_v
 
 if __name__ == '__main__':
     A = torch.load("grad_output.pt", map_location='cpu').npu()

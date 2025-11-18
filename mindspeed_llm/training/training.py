@@ -451,6 +451,8 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
     write_args_to_tensorboard()
 
     # Turn on training mode which enables dropout.
+    print_rank_0(f"model: {model}")
+    import pdb;pdb.set_trace()
     for model_module in model:
         model_module.train()
 

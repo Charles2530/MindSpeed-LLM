@@ -5,6 +5,7 @@
 import dataclasses
 from datetime import datetime
 import gc
+import imp
 import logging
 import math
 import os
@@ -237,6 +238,8 @@ def pretrain(train_valid_test_dataset_provider,
     timers('model-and-optimizer-setup').stop()
     print_datetime('after model, optimizer, and learning rate '
                    'scheduler are built')
+    print_rank_0(f"model: {model}")
+    import pdb;pdb.set_trace()
     app_metrics['app_build_optimizer_finish_time'] = one_logger_utils.get_timestamp_in_ms()
     config = get_model_config(model[0])
 
@@ -1058,6 +1061,7 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
         with one_logger.get_context_manager():
             one_logger.store_set('get_e2e_base_metrics', get_e2e_base_metrics)
     print(f"model:{model}")
+    import pdb;pdb.set_trace()
     while iteration < args.train_iters:
         if args.profile and \
            iteration == args.profile_step_start and \

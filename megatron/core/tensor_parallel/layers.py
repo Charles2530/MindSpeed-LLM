@@ -1003,7 +1003,7 @@ class ColumnParallelLinear(torch.nn.Module):
         is_expert: bool = False,
         tp_comm_buffer_name: str = None,  # Not used
         disable_grad_reduce: bool = False,
-        mxfp_quant:bool = True,
+        mxfp_quant:bool = False,
     ):
         super(ColumnParallelLinear, self).__init__()
 
@@ -1284,7 +1284,7 @@ class RowParallelLinear(torch.nn.Module):
         keep_master_weight_for_test: bool = False,
         is_expert: bool = False,
         tp_comm_buffer_name: str = None,  # Not used
-        mxfp_quant:bool = True,
+        mxfp_quant:bool = False,
     ):
         super(RowParallelLinear, self).__init__()
         self.mxfp_quant = mxfp_quant
