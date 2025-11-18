@@ -63,7 +63,7 @@ class MLP(MegatronModule):
         ffn_hidden_size = self.config.ffn_hidden_size
         if self.config.gated_linear_unit:
             ffn_hidden_size *= 2
-        print("reach mlp linear_fc1 with mxfp_quant: False")
+        # print("reach mlp linear_fc1 with mxfp_quant: False")
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
             self.input_size,
@@ -80,7 +80,7 @@ class MLP(MegatronModule):
 
         self.activation_func = self.config.activation_func
 
-        print("reach mlp linear_fc2 with mxfp_quant: True")
+        # print("reach mlp linear_fc2 with mxfp_quant: True")
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
             self.config.ffn_hidden_size,
@@ -129,6 +129,11 @@ class MLP(MegatronModule):
                 intermediate_parallel = self.activation_func(intermediate_parallel)
 
         # [s, b, h]
+        custom_quant_type = 'bf16'
+        if custom_quant_type == 'mxfp8':
+            from quant.mxfp_npu import quant_dequant_qkv
+            intermediate_parallel = quant_dequant_qkv(intermediate_parallel)
+            import pdb;pdb.set_trace()
         output, output_bias = self.linear_fc2(intermediate_parallel)
 
         return output, output_bias

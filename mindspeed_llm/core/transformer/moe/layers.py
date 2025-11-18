@@ -17,15 +17,15 @@ from megatron.core.tensor_parallel.mappings import (
 
 from megatron.core.model_parallel_config import ModelParallelConfig
 
-from megatron.core.tensor_parallel.layers import (
+from mindspeed.core.tensor_parallel.layers import (
     linear_with_grad_accumulation_and_async_allreduce,
-    custom_linear_with_grad_accumulation_and_async_allreduce,
+    # custom_linear_with_grad_accumulation_and_async_allreduce,
     linear_with_frozen_weight
 )
 
 
 linear_with_grad_accumulation_and_async_allreduce.warned = False
-custom_linear_with_grad_accumulation_and_async_allreduce.warned = False
+# custom_linear_with_grad_accumulation_and_async_allreduce.warned = False   
 
 class SEColumnParallelLinear(megatron.core.tensor_parallel.ColumnParallelLinear):
 
@@ -47,7 +47,7 @@ class SEColumnParallelLinear(megatron.core.tensor_parallel.ColumnParallelLinear)
         is_expert: bool = False,
         tp_comm_buffer_name: str = None,  # Not used
         shared_expert: bool = False,
-        mxfp_quant:bool = False,
+        # mxfp_quant:bool = False,
     ):
         super().__init__(
             input_size=input_size,
@@ -64,10 +64,10 @@ class SEColumnParallelLinear(megatron.core.tensor_parallel.ColumnParallelLinear)
             grad_output_buffer=grad_output_buffer,
             is_expert=is_expert,
             tp_comm_buffer_name=tp_comm_buffer_name,
-            mxfp_quant=mxfp_quant,
+            # mxfp_quant=mxfp_quant,
         )
         self.shared_expert = shared_expert
-        self.mxfp_quant = mxfp_quant
+        # self.mxfp_quant = mxfp_quant
     def forward(self, input_: torch.Tensor, weight: Optional[torch.Tensor] = None):
         """Forward of ColumnParallelLinear
 
@@ -134,10 +134,10 @@ class SEColumnParallelLinear(megatron.core.tensor_parallel.ColumnParallelLinear)
                 else None
             )
         else:
-            if self.mxfp_quant:
-                self._forward_impl = custom_linear_with_grad_accumulation_and_async_allreduce
-            else:
-                self._forward_impl = linear_with_grad_accumulation_and_async_allreduce
+            # if self.mxfp_quant:
+            #     self._forward_impl = custom_linear_with_grad_accumulation_and_async_allreduce
+            # else:
+            self._forward_impl = linear_with_grad_accumulation_and_async_allreduce
             output_parallel = self._forward_impl(
                 input=input_parallel,
                 weight=weight,
@@ -176,7 +176,7 @@ class SERowParallelLinear(megatron.core.tensor_parallel.RowParallelLinear):
         is_expert: bool = False,
         tp_comm_buffer_name: str = None,  # Not used
         shared_expert: bool = False,
-        mxfp_quant:bool = False,
+        # mxfp_quant:bool = False,
     ):
         super().__init__(input_size=input_size,
                          output_size=output_size,
@@ -189,10 +189,11 @@ class SERowParallelLinear(megatron.core.tensor_parallel.RowParallelLinear):
                          keep_master_weight_for_test=keep_master_weight_for_test,
                          is_expert=is_expert,
                          tp_comm_buffer_name=tp_comm_buffer_name,
-                         mxfp_quant=mxfp_quant)
+                        #  mxfp_quant=mxfp_quant
+                         )
 
         self.shared_expert = shared_expert
-        self.mxfp_quant = mxfp_quant
+        # self.mxfp_quant = mxfp_quant
     def forward(self, input_):
         """Forward of RowParallelLinear
 
@@ -220,10 +221,10 @@ class SERowParallelLinear(megatron.core.tensor_parallel.RowParallelLinear):
         if not self.weight.requires_grad:
             self._forward_impl = linear_with_frozen_weight
         else:
-            if self.mxfp_quant:
-                self._forward_impl = custom_linear_with_grad_accumulation_and_async_allreduce
-            else:
-                self._forward_impl = linear_with_grad_accumulation_and_async_allreduce
+            # if self.mxfp_quant:
+            #     self._forward_impl = custom_linear_with_grad_accumulation_and_async_allreduce
+            # else:
+            self._forward_impl = linear_with_grad_accumulation_and_async_allreduce
         output_parallel = self._forward_impl(
             input=input_parallel,
             weight=self.weight,

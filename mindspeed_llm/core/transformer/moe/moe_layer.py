@@ -61,7 +61,7 @@ def moe_layer_init_wrapper(init_func):
                                                                                   linear_fc2=SERowParallelLinear),
                                               shared_expert=True)
                 else:
-                    from megatron.core.tensor_parallel.layers import ColumnParallelLinear, RowParallelLinear
+                    from mindspeed.core.transformer.moe.layers import ColumnParallelLinear, RowParallelLinear
                     self.shared_experts = MLP(shared_expert_config, MLPSubmodules(linear_fc1=ColumnParallelLinear,
                                                                                   linear_fc2=RowParallelLinear),
                                               shared_expert=True)
