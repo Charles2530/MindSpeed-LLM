@@ -96,7 +96,7 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
     ffn_hidden_size = self.config.ffn_hidden_size
     if self.config.gated_linear_unit:
         ffn_hidden_size *= 2
-
+    print(f"reach mlp linear_fc1 with mxfp_quant: False, shared_expert: {shared_expert}")
     if shared_expert:
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
@@ -109,7 +109,8 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
-            shared_expert=shared_expert
+            shared_expert=shared_expert,
+            mxfp_quant=False,
         )
     else:
         self.linear_fc1 = build_module(
@@ -122,11 +123,12 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             bias=self.config.add_bias_linear,
             skip_bias_add=True,
             is_expert=is_expert,
-            tp_comm_buffer_name='fc1'
+            tp_comm_buffer_name='fc1',
+            mxfp_quant=False,
         )
 
     self.activation_func = self.config.activation_func
-
+    print(f"reach mlp linear_fc2 with mxfp_quant: True, shared_expert: {shared_expert}")
     if shared_expert:
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
@@ -139,7 +141,8 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
-            shared_expert=shared_expert
+            shared_expert=shared_expert,
+            mxfp_quant=True,
         )
     else:
         self.linear_fc2 = build_module(
@@ -152,7 +155,8 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             input_is_parallel=True,
             skip_bias_add=True,
             is_expert=is_expert,
-            tp_comm_buffer_name='fc2'
+            tp_comm_buffer_name='fc2',
+            mxfp_quant=True,
         )
 
     self.shared_expert = shared_expert

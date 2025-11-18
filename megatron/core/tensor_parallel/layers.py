@@ -1133,7 +1133,7 @@ class ColumnParallelLinear(torch.nn.Module):
             self._forward_impl = custom_linear_with_grad_accumulation_and_async_allreduce
         else:
             self._forward_impl = linear_with_grad_accumulation_and_async_allreduce
-            print("without apply mxfp_quant")
+            # print("without apply mxfp_quant")
         # Hook adding a default empty _extra_state for state dict
         self._register_load_state_dict_pre_hook(
             lambda state_dict, prefix, *args, **kwargs: state_dict.setdefault(

@@ -371,6 +371,7 @@ class MultiHeadLatentAttention(SelfAttention):
             # core attention computation
             # ==================================
             attn_mask_type = AttnMaskType.causal
+            print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
             if self.checkpoint_core_attention and self.training:
                 core_attn_out = self._checkpointed_attention_forward(
                     query,
