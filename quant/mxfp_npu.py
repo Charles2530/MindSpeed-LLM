@@ -610,6 +610,22 @@ def quant_dequant_qkv(q,k,v,elem_format='fp8_e5m2'):
     final_k = k + (k_temp - k.detach())
     final_v = v + (v_temp - v.detach())
     return final_q,final_k,final_v
+    
+def quant_dequant_tensor(tensor,elem_format='fp8_e5m2'):
+    scale_bits = 8
+    tensor_temp = tensor.clone()
+    tensor_temp = _quantize_mx(
+        tensor_temp.detach(),
+        scale_bits,
+        elem_format,
+        shared_exp_method="max",
+        axes=-1,
+        block_size=16,
+        round="nearest",
+        flush_fp32_subnorms=False,
+    )
+    final_tensor = tensor + (tensor_temp - tensor.detach())
+    return final_tensor
 
 if __name__ == '__main__':
     A = torch.load("grad_output.pt", map_location='cpu').npu()

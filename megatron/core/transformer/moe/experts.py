@@ -447,8 +447,8 @@ class TEGroupedMLP(MegatronModule):
         
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
-            from quant.mxfp_npu import quant_dequant_qkv
-            intermediate_parallel = quant_dequant_qkv(intermediate_parallel)
+            from quant.mxfp_npu import quant_dequant_tensor
+            intermediate_parallel = quant_dequant_tensor(intermediate_parallel)
             import pdb;pdb.set_trace()
         output, output_bias = self.linear_fc2(intermediate_parallel, tokens_per_expert)
 
