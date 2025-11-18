@@ -99,7 +99,7 @@ GPT_ARGS="
     --seq-length 1024 \
     --max-position-embeddings 163840 \
     --micro-batch-size 1 \
-    --global-batch-size 8 \
+    --global-batch-size 64 \
     --make-vocab-size-divisible-by 1 \
     --lr 9e-6 \
     --train-iters 2000 \
