@@ -101,7 +101,7 @@ class DotProductAttention(MegatronModule):
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
             query,key,value = quant_dequant_qkv(query,key,value)
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
         assert packed_seq_params is None, (
             "Packed sequence is not supported by DotProductAttention."
             "Please use TEDotProductAttention instead."
