@@ -12,10 +12,10 @@ NNODES=1
 NODE_RANK=0
 WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
 
-CKPT_SAVE_DIR="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
-DATA_PATH="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
-TOKENIZER_MODEL="/afs_c_mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite"
-CKPT_LOAD_DIR="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/deepseek2_lite_mcore"
+CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
+DATA_PATH="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
+TOKENIZER_MODEL="/afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite"
+CKPT_LOAD_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/deepseek2_lite_mcore"
 
 TP=1
 PP=1

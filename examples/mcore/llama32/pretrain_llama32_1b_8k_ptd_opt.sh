@@ -10,9 +10,9 @@ NNODES=1
 NODE_RANK=0
 WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
 
-CKPT_SAVE_DIR="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
-DATA_PATH="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
-TOKENIZER_MODEL="/afs_c_mtc/gongruihao/Llama-3.2-1B-Instruct"
+CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
+DATA_PATH="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
+TOKENIZER_MODEL="/afs-c-mtc/gongruihao/Llama-3.2-1B-Instruct"
 CKPT_LOAD_DIR=None
 TP=1
 PP=1

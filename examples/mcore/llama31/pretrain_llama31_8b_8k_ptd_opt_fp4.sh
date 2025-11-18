@@ -9,10 +9,10 @@ NNODES=1
 NODE_RANK=0
 WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
 
-CKPT_SAVE_DIR="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
-DATA_PATH="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
-TOKENIZER_MODEL="/afs_c_mtc/gongruihao/Meta-Llama-3.1-8B"
-CKPT_LOAD_DIR="/afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/llama31-mcore/"
+CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
+DATA_PATH="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
+TOKENIZER_MODEL="/afs-c-mtc/gongruihao/Meta-Llama-3.1-8B"
+CKPT_LOAD_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/llama31-mcore/"
 TP=8
 PP=1
 

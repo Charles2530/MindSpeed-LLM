@@ -11,6 +11,6 @@ python convert_ckpt.py \
    --params-dtype bf16 \
    --target-tensor-parallel-size 8 \
    --target-pipeline-parallel-size 1 \
-   --load-dir /afs_c_mtc/gongruihao/Meta-Llama-3.1-8B/ \
+   --load-dir /afs-c-mtc/gongruihao/Meta-Llama-3.1-8B/ \
    --save-dir ./model_weights/llama31-mcore/ \
-   --tokenizer-model /afs_c_mtc/gongruihao/Meta-Llama-3.1-8B/  # --num-layer-list 17,20,22,21 等参数根据模型需求添加
+   --tokenizer-model /afs-c-mtc/gongruihao/Meta-Llama-3.1-8B/  # --num-layer-list 17,20,22,21 等参数根据模型需求添加

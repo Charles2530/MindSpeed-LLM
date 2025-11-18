@@ -4,7 +4,7 @@ source /usr/local/Ascend/ascend-toolkit/set_env.sh
 
 python ./preprocess_data.py \
   --input ./dataset/wikipedia/ \
-  --tokenizer-name-or-path /afs_c_mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite/ \
+  --tokenizer-name-or-path /afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite/ \
   --output-prefix ./dataset/enwiki \
   --workers 128 \
   --log-interval 1000 \

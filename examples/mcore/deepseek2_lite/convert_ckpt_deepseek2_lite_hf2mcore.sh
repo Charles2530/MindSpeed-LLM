@@ -15,7 +15,7 @@ python convert_ckpt.py \
    --target-pipeline-parallel-size 1 \
    --target-expert-parallel-size 8 \
    --spec mindspeed_llm.tasks.models.spec.deepseek_spec layer_spec \
-   --load-dir /afs_c_mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite \
+   --load-dir /afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite \
    --save-dir ./model_weights/deepseek2_lite_mcore/ \
-   --tokenizer-model /afs_c_mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite
+   --tokenizer-model /afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite
 

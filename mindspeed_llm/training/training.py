@@ -548,7 +548,7 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
                                      num_floating_point_operations_so_far,
                                      checkpointing_context=None)
             import os
-            os.system("bash /afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
+            os.system("bash /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
         num_microbatches = get_num_microbatches()
         update_num_microbatches(args.consumed_train_samples, consistency_check=True)
 
@@ -636,7 +636,7 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
                                          num_floating_point_operations_so_far,
                                          checkpointing_context=None)
                 import os
-                os.system("bash /afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
+                os.system("bash /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
                 print_datetime('exiting program after receiving SIGTERM.')
                 exit = True
                 break
@@ -648,7 +648,7 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
                                      num_floating_point_operations_so_far,
                                      checkpointing_context=None)
             import os
-            os.system("bash /afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
+            os.system("bash /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
             saved_checkpoint = True
 
         # Exiting based on duration
@@ -667,7 +667,7 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
                                              num_floating_point_operations_so_far,
                                              checkpointing_context=None)
                     import os
-                    os.system("bash /afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
+                    os.system("bash /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
                 print_datetime('exiting program after {} minutes'.format(train_time))
                 exit = True
                 break
@@ -681,7 +681,7 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
                                          checkpointing_context=None
                                          )
                 import os
-                os.system("bash /afs_c_mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
+                os.system("bash /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/cleanup_ckpt.sh")
             torch.distributed.barrier()
             print_datetime('exiting program at iteration {}'.format(iteration))
             exit = True

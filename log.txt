@@ -18,7 +18,7 @@
 ++ TOOLCHAIN_HOME=/usr/local/Ascend/ascend-toolkit/latest/toolkit
 ++ export ASCEND_HOME_PATH=/usr/local/Ascend/ascend-toolkit/latest
 ++ ASCEND_HOME_PATH=/usr/local/Ascend/ascend-toolkit/latest
-+ python convert_ckpt.py --moe-grouped-gemm --use-mcore-models --model-type-hf deepseek2-lite --model-type GPT --load-model-type hf --save-model-type mg --params-dtype bf16 --target-tensor-parallel-size 1 --target-pipeline-parallel-size 1 --target-expert-parallel-size 8 --spec mindspeed_llm.tasks.models.spec.deepseek_spec layer_spec --load-dir /afs_c_mtc/gongruihao/DeepSeek-V2-Lite --save-dir ./model_weights/deepseek2_lite_mcore/ --tokenizer-model /afs_c_mtc/gongruihao/DeepSeek-V2-Lite
++ python convert_ckpt.py --moe-grouped-gemm --use-mcore-models --model-type-hf deepseek2-lite --model-type GPT --load-model-type hf --save-model-type mg --params-dtype bf16 --target-tensor-parallel-size 1 --target-pipeline-parallel-size 1 --target-expert-parallel-size 8 --spec mindspeed_llm.tasks.models.spec.deepseek_spec layer_spec --load-dir /afs-c-mtc/gongruihao/DeepSeek-V2-Lite --save-dir ./model_weights/deepseek2_lite_mcore/ --tokenizer-model /afs-c-mtc/gongruihao/DeepSeek-V2-Lite
 /usr/local/python3.10.17/lib/python3.10/site-packages/torch_npu/contrib/transfer_to_npu.py:295: ImportWarning: 
     *************************************************************************************************************
     The torch.Tensor.cuda and torch.nn.Module.cuda are replaced with torch.Tensor.npu and torch.nn.Module.npu now..
