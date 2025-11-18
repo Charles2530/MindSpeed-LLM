@@ -97,6 +97,7 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
     if self.config.gated_linear_unit:
         ffn_hidden_size *= 2
     print(f"reach mlp linear_fc1 with mxfp_quant: False, shared_expert: {shared_expert}")
+    print(f"submodules.linear_fc1: {submodules.linear_fc1}, type: {type(submodules.linear_fc1)}")
     if shared_expert:
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
@@ -124,7 +125,7 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
-            #mxfp_quant=False,
+            mxfp_quant=False,
         )
 
     self.activation_func = self.config.activation_func

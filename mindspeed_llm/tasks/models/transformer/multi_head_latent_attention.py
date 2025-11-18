@@ -371,7 +371,7 @@ class MultiHeadLatentAttention(SelfAttention):
             # core attention computation
             # ==================================
             attn_mask_type = AttnMaskType.causal
-            print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
+            # print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
             if self.checkpoint_core_attention and self.training:
                 core_attn_out = self._checkpointed_attention_forward(
                     query,
@@ -382,6 +382,11 @@ class MultiHeadLatentAttention(SelfAttention):
                     packed_seq_params=packed_seq_params,
                 )
             else:
+                custom_quant_type = 'bf16'
+                if custom_quant_type == 'mxfp8':
+                    from quant.mxfp_npu import quant_dequant_qkv
+                    query,key,value = quant_dequant_qkv(query,key,value)
+                    print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
                 core_attn_out = self.core_attention(
                     query,
                     key,
