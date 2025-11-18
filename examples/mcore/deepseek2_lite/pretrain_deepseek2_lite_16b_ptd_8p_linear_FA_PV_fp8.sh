@@ -7,6 +7,10 @@ sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'
     megatron/core/transformer/dot_product_attention.py
 sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
     mindspeed_llm/tasks/models/transformer/multi_head_latent_attention.py
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+    megatron/core/transformer/moe/experts.py
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+    megatron/core/transformer/mlp.py
 NPUS_PER_NODE=8
 MASTER_ADDR=localhost
 MASTER_PORT=6000
