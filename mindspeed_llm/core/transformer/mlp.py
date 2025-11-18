@@ -97,6 +97,8 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
     if self.config.gated_linear_unit:
         ffn_hidden_size *= 2
     print("reach linear in moe layer init")
+    print(f"reach mlp linear_fc1 with mxfp_quant: True, shared_expert: {shared_expert}")
+
     if shared_expert:
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
@@ -110,10 +112,9 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
             shared_expert=shared_expert,
-            #mxfp_quant=False,
+            mxfp_quant=False,
         )
     else:
-        print(f"reach mlp linear_fc1 with mxfp_quant: True, shared_expert: {shared_expert}")
 
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
@@ -130,6 +131,8 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
         )
 
     self.activation_func = self.config.activation_func
+    print(f"reach mlp linear_fc2 with mxfp_quant: True, shared_expert: {shared_expert}")
+
     if shared_expert:
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
@@ -143,10 +146,9 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
             shared_expert=shared_expert,
-            # mxfp_quant=True,
+            mxfp_quant=True,
         )
     else:
-        print(f"reach mlp linear_fc2 with mxfp_quant: True, shared_expert: {shared_expert}")
 
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
