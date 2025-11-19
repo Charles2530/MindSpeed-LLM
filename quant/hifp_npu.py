@@ -223,25 +223,21 @@ def hifp_baddbmm(input, batch1, batch2, beta=1.0, alpha=1.0):
 
 if __name__ == "__main__":
     A = torch.randn(1024, 1024).npu()
-    fp8 = quant_hif8(A)
+    hifp8 = quant_hif8(A)
     # fp8 = any_to_hif8_dml(A, Ec=15)
+    from quant.mxfp_npu import quant_dequant_tensor
+    mxfp8 = quant_dequant_tensor(A, 'fp8_e5m2')
 
-    print("origin_A:", A)
-    print("hif8_A:", fp8)
-    
-    print(f"A_shape:{A.shape},grad_max:{torch.max(A)},grad_min:{torch.min(A)}")
+    loss_quant_mxfp8 = torch.mean((A - mxfp8) ** 2)
+    loss_quant_hifp8 = torch.mean((A - hifp8) ** 2)
+    print(f"loss_quant_mxfp8: {loss_quant_mxfp8.item()}, loss_quant_hifp8: {loss_quant_hifp8.item()}")
     B = torch.randn(1024, 1024).npu()
-    print(f"B_shape:{B.shape},input_max:{torch.max(B)},input_min:{torch.min(B)}")
     from quant.mxfp_npu import mxfp_matmul
     C_mxfp8 = mxfp_matmul(A.transpose(-2,-1),B,'fp8_e5m2')
-    print(f"C_shape:{C_mxfp8.shape},output_max:{torch.max(C_mxfp8)},output_min:{torch.min(C_mxfp8)}")
-
     C_hifp8 = hifp_matmul(A.transpose(-2,-1),B)
     C_bf16 = torch.matmul(A.transpose(-2,-1),B).to(torch.bfloat16)
     # import MSELoss
-    mse_loss = torch.nn.MSELoss()
-    loss_mx = mse_loss(C_mxfp8, C_bf16)
-    loss_hif = mse_loss(C_hifp8, C_bf16)
+    loss_mx = torch.mean((C_bf16 - C_mxfp8) ** 2)
+    loss_hif = torch.mean((C_bf16 - C_hifp8) ** 2)
     print(f"loss_mx: {loss_mx.item()}, loss_hif: {loss_hif.item()}")
     
-    print(f"C_shape:{C_hifp8.shape},output_max:{torch.max(C_hifp8)},output_min:{torch.min(C_hifp8)}")
