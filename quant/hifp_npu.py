@@ -222,7 +222,7 @@ def hifp_baddbmm(input, batch1, batch2, beta=1.0, alpha=1.0):
     return HIFPBAddBmm.apply(input, batch1, batch2, beta, alpha)
 
 if __name__ == "__main__":
-    A = torch.load("grad_output.pt", map_location='cpu').npu()
+    A = torch.randn(1024, 1024).npu()
     fp8 = quant_hif8(A)
     # fp8 = any_to_hif8_dml(A, Ec=15)
 
@@ -230,9 +230,18 @@ if __name__ == "__main__":
     print("hif8_A:", fp8)
     
     print(f"A_shape:{A.shape},grad_max:{torch.max(A)},grad_min:{torch.min(A)}")
-    B = torch.load("total_input.pt", map_location='cpu').npu()
+    B = torch.randn(1024, 1024).npu()
     print(f"B_shape:{B.shape},input_max:{torch.max(B)},input_min:{torch.min(B)}")
+    from quant.mxfp_npu import mxfp_matmul
+    C_mxfp8 = mxfp_matmul(A.transpose(-2,-1),B,'fp8_e5m2')
+    print(f"C_shape:{C_mxfp8.shape},output_max:{torch.max(C_mxfp8)},output_min:{torch.min(C_mxfp8)}")
 
     C_hifp8 = hifp_matmul(A.transpose(-2,-1),B)
+    C_bf16 = torch.matmul(A.transpose(-2,-1),B).to(torch.bfloat16)
+    # import MSELoss
+    mse_loss = torch.nn.MSELoss()
+    loss_mx = mse_loss(C_mxfp8, C_bf16)
+    loss_hif = mse_loss(C_hifp8, C_bf16)
+    print(f"loss_mx: {loss_mx.item()}, loss_hif: {loss_hif.item()}")
     
     print(f"C_shape:{C_hifp8.shape},output_max:{torch.max(C_hifp8)},output_min:{torch.min(C_hifp8)}")
