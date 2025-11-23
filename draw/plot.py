@@ -11,7 +11,7 @@ from matplotlib.ticker import MultipleLocator, AutoMinorLocator, MaxNLocator
 X_LIMIT = (0,700) 
 FILE_BF16 = 'bf16_deepseek_1118.log'      # 基准日志 (绿色背景)
 FILE_CURRENT = 'mxfp8_deepseek.log'  # 当前日志 (红色主角)
-OUTPUT_IMG = f'draw/compare_loss_{X_LIMIT}.png' # 输出图片名
+OUTPUT_IMG = f'draw/compare_loss_{X_LIMIT[0]}_{X_LIMIT[1]}.png' # 输出图片名
 
 # 【关键】只看前 2000 步 (锁定范围)
 # ==========================================
