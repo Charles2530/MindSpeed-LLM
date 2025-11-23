@@ -106,31 +106,45 @@ def main():
     # 3. Start plotting
     plt.figure(figsize=(12, 8), dpi=300) # High-resolution canvas
 
-    # --- Draw baseline line (Green) ---
-    # Green, semi-transparent, placed at bottom layer as reference
+    # --- Draw baseline line (Blue) ---
+    # Blue, placed at bottom layer as reference
     if iters_bf16 and losses_bf16:
-        plt.plot(iters_bf16, losses_bf16, 
-                 label='Baseline (BF16)', 
-                 color='blue',      # [Color] Green
-                 linestyle='-',      # Solid line
-                 linewidth=0.6,      # [Line width] Thin line (show details)
-                 alpha=1.0,          # [Transparency] Opaque (1.0)
-                 zorder=10)           # Layer level 1 (bottom layer)
-        print(f"[Debug] Plotted BF16 line with {len(iters_bf16)} points")
+        # Filter data within X_LIMIT range for display
+        filtered_bf16_iters = [x for x in iters_bf16 if X_LIMIT[0] <= x <= X_LIMIT[1]]
+        filtered_bf16_losses = [losses_bf16[i] for i, x in enumerate(iters_bf16) if X_LIMIT[0] <= x <= X_LIMIT[1]]
+        
+        if filtered_bf16_iters:
+            plt.plot(filtered_bf16_iters, filtered_bf16_losses, 
+                     label='Baseline (BF16)', 
+                     color='blue',      # [Color] Blue
+                     linestyle='-',      # Solid line
+                     linewidth=0.6,)     # [Line width] Thin line (show details)
+                    #  alpha=1.0,          # [Transparency] Opaque (1.0)
+                    #  zorder=1)           # Layer level 1 (bottom layer)
+            print(f"[Debug] Plotted BF16 line with {len(filtered_bf16_iters)} points in range {X_LIMIT[0]}-{X_LIMIT[1]}")
+        else:
+            print(f"[Warning] BF16 data has no points in range {X_LIMIT[0]}-{X_LIMIT[1]}")
     else:
         print("[Warning] Skipping BF16 line (no data)")
 
-    # --- Draw current line (Red) ---
-    # Red, opaque, placed at top layer
+    # --- Draw current line (Green) ---
+    # Green, placed at top layer
     if iters_curr and losses_curr:
-        plt.plot(iters_curr, losses_curr, 
-                 label='Current Run', 
-                 color='green',        # [Color] Red
-                 linestyle='-',      # Solid line
-                 linewidth=0.6,      # [Line width] Thin line
-                 alpha=1.0,          # [Transparency] Opaque (1.0)
-                 zorder=9)          # Layer level 10 (top layer)
-        print(f"[Debug] Plotted Current line with {len(iters_curr)} points")
+        # Filter data within X_LIMIT range for display
+        filtered_curr_iters = [x for x in iters_curr if X_LIMIT[0] <= x <= X_LIMIT[1]]
+        filtered_curr_losses = [losses_curr[i] for i, x in enumerate(iters_curr) if X_LIMIT[0] <= x <= X_LIMIT[1]]
+        
+        if filtered_curr_iters:
+            plt.plot(filtered_curr_iters, filtered_curr_losses, 
+                     label='Current Run', 
+                     color='green',        # [Color] Green
+                     linestyle='-',      # Solid line
+                     linewidth=0.6)      # [Line width] Thin line
+                    #  alpha=1.0,          # [Transparency] Opaque (1.0)
+                    #  zorder=1)          # Layer level 10 (top layer)
+            print(f"[Debug] Plotted Current line with {len(filtered_curr_iters)} points in range {X_LIMIT[0]}-{X_LIMIT[1]}")
+        else:
+            print(f"[Warning] Current data has no points in range {X_LIMIT[0]}-{X_LIMIT[1]}")
     else:
         print("[Error] Cannot plot current line (no data)")
         return
