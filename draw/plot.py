@@ -129,7 +129,7 @@ def main():
                  linestyle='-',      # Solid line
                  linewidth=0.6,      # [Line width] Thin line
                  alpha=1.0,          # [Transparency] Opaque (1.0)
-                 zorder=10)          # Layer level 10 (top layer)
+                 zorder=9)          # Layer level 10 (top layer)
         print(f"[Debug] Plotted Current line with {len(iters_curr)} points")
     else:
         print("[Error] Cannot plot current line (no data)")
