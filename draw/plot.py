@@ -111,7 +111,7 @@ def main():
     if iters_bf16 and losses_bf16:
         plt.plot(iters_bf16, losses_bf16, 
                  label='Baseline (BF16)', 
-                 color='green',      # [Color] Green
+                 color='blue',      # [Color] Green
                  linestyle='-',      # Solid line
                  linewidth=0.1,      # [Line width] Thin line (show details)
                  alpha=1.0,          # [Transparency] Opaque (1.0)
@@ -122,18 +122,18 @@ def main():
 
     # --- Draw current line (Red) ---
     # Red, opaque, placed at top layer
-    # if iters_curr and losses_curr:
-    #     plt.plot(iters_curr, losses_curr, 
-    #              label='Current Run', 
-    #              color='red',        # [Color] Red
-    #              linestyle='-',      # Solid line
-    #              linewidth=0.1,      # [Line width] Thin line
-    #              alpha=1.0,          # [Transparency] Opaque (1.0)
-    #              zorder=10)          # Layer level 10 (top layer)
-    #     print(f"[Debug] Plotted Current line with {len(iters_curr)} points")
-    # else:
-    #     print("[Error] Cannot plot current line (no data)")
-    #     return
+    if iters_curr and losses_curr:
+        plt.plot(iters_curr, losses_curr, 
+                 label='Current Run', 
+                 color='yellow',        # [Color] Red
+                 linestyle='-',      # Solid line
+                 linewidth=0.1,      # [Line width] Thin line
+                 alpha=1.0,          # [Transparency] Opaque (1.0)
+                 zorder=10)          # Layer level 10 (top layer)
+        print(f"[Debug] Plotted Current line with {len(iters_curr)} points")
+    else:
+        print("[Error] Cannot plot current line (no data)")
+        return
 
     # 4. Set axis range and ticks
     ax = plt.gca()
