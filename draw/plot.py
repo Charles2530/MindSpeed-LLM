@@ -113,7 +113,7 @@ def main():
                  label='Baseline (BF16)', 
                  color='blue',      # [Color] Green
                  linestyle='-',      # Solid line
-                 linewidth=0.1,      # [Line width] Thin line (show details)
+                 linewidth=0.6,      # [Line width] Thin line (show details)
                  alpha=1.0,          # [Transparency] Opaque (1.0)
                  zorder=10)           # Layer level 1 (bottom layer)
         print(f"[Debug] Plotted BF16 line with {len(iters_bf16)} points")
@@ -127,7 +127,7 @@ def main():
                  label='Current Run', 
                  color='yellow',        # [Color] Red
                  linestyle='-',      # Solid line
-                 linewidth=0.1,      # [Line width] Thin line
+                 linewidth=0.6,      # [Line width] Thin line
                  alpha=1.0,          # [Transparency] Opaque (1.0)
                  zorder=10)          # Layer level 10 (top layer)
         print(f"[Debug] Plotted Current line with {len(iters_curr)} points")
