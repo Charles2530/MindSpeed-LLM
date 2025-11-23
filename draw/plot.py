@@ -125,7 +125,7 @@ def main():
     if iters_curr and losses_curr:
         plt.plot(iters_curr, losses_curr, 
                  label='Current Run', 
-                 color='yellow',        # [Color] Red
+                 color='green',        # [Color] Red
                  linestyle='-',      # Solid line
                  linewidth=0.6,      # [Line width] Thin line
                  alpha=1.0,          # [Transparency] Opaque (1.0)
