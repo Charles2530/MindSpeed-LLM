@@ -114,8 +114,8 @@ def main():
                  color='green',      # [Color] Green
                  linestyle='-',      # Solid line
                  linewidth=0.6,      # [Line width] Thin line (show details)
-                 alpha=0.5,          # [Transparency] Semi-transparent (0.5)
-                 zorder=1)           # Layer level 1 (bottom layer)
+                 alpha=1.0,          # [Transparency] Opaque (1.0)
+                 zorder=10)           # Layer level 1 (bottom layer)
         print(f"[Debug] Plotted BF16 line with {len(iters_bf16)} points")
     else:
         print("[Warning] Skipping BF16 line (no data)")
