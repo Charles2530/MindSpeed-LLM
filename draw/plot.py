@@ -116,7 +116,7 @@ def main():
         if filtered_bf16_iters:
             plt.plot(filtered_bf16_iters, filtered_bf16_losses, 
                      label='Baseline (BF16)', 
-                     color='blue',      # [Color] Blue
+                     color='red',      # [Color] Blue
                      linestyle='-',      # Solid line
                      linewidth=0.6,)     # [Line width] Thin line (show details)
                     #  alpha=1.0,          # [Transparency] Opaque (1.0)
