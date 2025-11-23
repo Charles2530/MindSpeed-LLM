@@ -15,7 +15,6 @@ OUTPUT_IMG = f'draw/compare_loss_{X_LIMIT[0]}_{X_LIMIT[1]}.png' # Output image n
 
 # [Key] Only show first 2000 steps (locked range)
 # ==========================================
-
 def read_log_data(file_path):
     """
     Read log function
@@ -108,7 +107,7 @@ def main():
              linestyle='-',      # Solid line
              linewidth=1.0,      # [Line width] Thin line
              alpha=1.0,          # [Transparency] Opaque (1.0)
-             zorder=10)          # Layer level 10 (top layer)
+             zorder=1)          # Layer level 10 (top layer)
 
     # 4. Set axis range and ticks
     ax = plt.gca()
