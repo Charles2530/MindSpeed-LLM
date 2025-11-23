@@ -95,7 +95,7 @@ def main():
              label='Baseline (BF16)', 
              color='green',      # [Color] Green
              linestyle='-',      # Solid line
-             linewidth=1.0,      # [Line width] Thin line (show details)
+             linewidth=0.6,      # [Line width] Thin line (show details)
              alpha=0.5,          # [Transparency] Semi-transparent (0.5)
              zorder=1)           # Layer level 1 (bottom layer)
 
@@ -105,8 +105,8 @@ def main():
              label='Current Run', 
              color='red',        # [Color] Red
              linestyle='-',      # Solid line
-             linewidth=1.0,      # [Line width] Thin line
-             alpha=1.0,          # [Transparency] Opaque (1.0)
+             linewidth=0.6,      # [Line width] Thin line
+             alpha=0.5,          # [Transparency] Opaque (1.0)
              zorder=1)          # Layer level 10 (top layer)
 
     # 4. Set axis range and ticks
