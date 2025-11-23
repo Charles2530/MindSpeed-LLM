@@ -50,64 +50,90 @@ def main():
     iters_bf16, losses_bf16 = read_log_data(FILE_BF16)
     iters_curr, losses_curr = read_log_data(FILE_CURRENT)
 
-    if not iters_bf16 or not iters_curr:
-        print("Stop: Data reading incomplete, please check logs.")
+    # Debug: Print data statistics
+    print(f"\n[Debug] BF16 data: {len(iters_bf16)} points")
+    if iters_bf16:
+        print(f"        Range: {min(iters_bf16)} - {max(iters_bf16)}")
+    print(f"[Debug] Current data: {len(iters_curr)} points")
+    if iters_curr:
+        print(f"        Range: {min(iters_curr)} - {max(iters_curr)}")
+
+    if not iters_bf16:
+        print(f"[Warning] BF16 log file '{FILE_BF16}' has no data or file not found!")
+        print("         Will only plot current run (red line).")
+    if not iters_curr:
+        print(f"[Error] Current log file '{FILE_CURRENT}' has no data or file not found!")
+        print("        Cannot generate plot.")
         return
 
     # =======================================================
     # 2. [Calculation] Calculate Loss ratio (Current / BF16) in range 0 ~ X_LIMIT
     # =======================================================
-    # Convert BF16 to dictionary {step: loss} for quick lookup
-    dict_bf16 = dict(zip(iters_bf16, losses_bf16))
-    
     ratios = []
-    print("-" * 40)
-    print(f"Calculating average Loss ratio for first {X_LIMIT} steps...")
-
-    for i, step in enumerate(iters_curr):
-        # Filter condition: within 2000 steps, and BF16 log also has data for this step
-        if step >= X_LIMIT[0] and step <= X_LIMIT[1] and step in dict_bf16:
-            loss_now = losses_curr[i]
-            loss_base = dict_bf16[step]
-            
-            if loss_base != 0:
-                # Calculate ratio
-                ratios.append(loss_now / loss_base)
+    ratio_str = ""
     
-    # Generate statistical text for title
-    if ratios:
-        avg_ratio = sum(ratios) / len(ratios)
-        ratio_str = f"Avg Ratio (0-{X_LIMIT}): {avg_ratio:.4f}x"
-        print(f"[Result] Average ratio: {avg_ratio:.4f}")
-        print("       (>1.0 means current Loss is high, <1.0 means current Loss is low)")
+    if iters_bf16 and losses_bf16:
+        # Convert BF16 to dictionary {step: loss} for quick lookup
+        dict_bf16 = dict(zip(iters_bf16, losses_bf16))
+        
+        print("-" * 40)
+        print(f"Calculating average Loss ratio for range {X_LIMIT[0]}-{X_LIMIT[1]} steps...")
+
+        for i, step in enumerate(iters_curr):
+            # Filter condition: within X_LIMIT range, and BF16 log also has data for this step
+            if step >= X_LIMIT[0] and step <= X_LIMIT[1] and step in dict_bf16:
+                loss_now = losses_curr[i]
+                loss_base = dict_bf16[step]
+                
+                if loss_base != 0:
+                    # Calculate ratio
+                    ratios.append(loss_now / loss_base)
+        
+        # Generate statistical text for title
+        if ratios:
+            avg_ratio = sum(ratios) / len(ratios)
+            ratio_str = f"Avg Ratio ({X_LIMIT[0]}-{X_LIMIT[1]}): {avg_ratio:.4f}x"
+            print(f"[Result] Average ratio: {avg_ratio:.4f} (based on {len(ratios)} overlapping points)")
+            print("       (>1.0 means current Loss is high, <1.0 means current Loss is low)")
+        else:
+            ratio_str = "No Overlap Data"
+            print(f"[Warning] No overlapping steps found in range {X_LIMIT[0]}-{X_LIMIT[1]}, cannot calculate ratio.")
+        print("-" * 40)
     else:
-        avg_ratio = 0
-        ratio_str = "No Overlap Data"
-        print("[Warning] No overlapping steps found, cannot calculate ratio.")
-    print("-" * 40)
+        ratio_str = "BF16 data unavailable"
+        print("[Info] Skipping ratio calculation (no BF16 data)")
 
     # 3. Start plotting
     plt.figure(figsize=(12, 8), dpi=300) # High-resolution canvas
 
     # --- Draw baseline line (Green) ---
     # Green, semi-transparent, placed at bottom layer as reference
-    plt.plot(iters_bf16, losses_bf16, 
-             label='Baseline (BF16)', 
-             color='green',      # [Color] Green
-             linestyle='-',      # Solid line
-             linewidth=0.6,      # [Line width] Thin line (show details)
-             alpha=0.5,          # [Transparency] Semi-transparent (0.5)
-             zorder=1)           # Layer level 1 (bottom layer)
+    if iters_bf16 and losses_bf16:
+        plt.plot(iters_bf16, losses_bf16, 
+                 label='Baseline (BF16)', 
+                 color='green',      # [Color] Green
+                 linestyle='-',      # Solid line
+                 linewidth=0.6,      # [Line width] Thin line (show details)
+                 alpha=0.5,          # [Transparency] Semi-transparent (0.5)
+                 zorder=1)           # Layer level 1 (bottom layer)
+        print(f"[Debug] Plotted BF16 line with {len(iters_bf16)} points")
+    else:
+        print("[Warning] Skipping BF16 line (no data)")
 
     # --- Draw current line (Red) ---
     # Red, opaque, placed at top layer
-    plt.plot(iters_curr, losses_curr, 
-             label='Current Run', 
-             color='red',        # [Color] Red
-             linestyle='-',      # Solid line
-             linewidth=0.6,      # [Line width] Thin line
-             alpha=0.5,          # [Transparency] Opaque (1.0)
-             zorder=1)          # Layer level 10 (top layer)
+    if iters_curr and losses_curr:
+        plt.plot(iters_curr, losses_curr, 
+                 label='Current Run', 
+                 color='red',        # [Color] Red
+                 linestyle='-',      # Solid line
+                 linewidth=0.6,      # [Line width] Thin line
+                 alpha=1.0,          # [Transparency] Opaque (1.0)
+                 zorder=10)          # Layer level 10 (top layer)
+        print(f"[Debug] Plotted Current line with {len(iters_curr)} points")
+    else:
+        print("[Error] Cannot plot current line (no data)")
+        return
 
     # 4. Set axis range and ticks
     ax = plt.gca()
