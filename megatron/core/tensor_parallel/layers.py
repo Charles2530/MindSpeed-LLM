@@ -693,8 +693,8 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
             total_input = all_gather_buffer
         else:
             total_input = input
-        from quant.mxfp_npu import mxfp_matmul
-        from quant.hifp_npu import hifp_matmul
+        from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
+        from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
         custom_quant_type = 'hifp8'
         if custom_quant_type == 'mxfp4':
             output = mxfp_matmul(total_input,weight.t(),'fp4_e2m1').to(torch.bfloat16)
@@ -741,8 +741,8 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
                 total_input = all_gather_buffer
             else:
                 total_input = input
-        from quant.mxfp_npu import mxfp_matmul
-        from quant.hifp_npu import hifp_matmul
+        from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
+        from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
         custom_quant_type = 'hifp8'
         if custom_quant_type == 'mxfp4':
             grad_input = mxfp_matmul(grad_output,weight,'fp4_e2m1').to(torch.bfloat16)

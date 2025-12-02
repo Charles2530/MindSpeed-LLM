@@ -97,7 +97,7 @@ class DotProductAttention(MegatronModule):
         attn_mask_type: AttnMaskType = None,
         packed_seq_params: PackedSeqParams = None,
     ):
-        from quant.mxfp_npu import quant_dequant_qkv
+        from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
             query,key,value = quant_dequant_qkv(query,key,value)

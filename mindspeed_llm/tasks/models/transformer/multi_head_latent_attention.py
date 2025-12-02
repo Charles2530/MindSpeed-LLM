@@ -384,7 +384,7 @@ class MultiHeadLatentAttention(SelfAttention):
             else:
                 custom_quant_type = 'bf16'
                 if custom_quant_type == 'mxfp8':
-                    from quant.mxfp_npu import quant_dequant_qkv
+                    from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
                     query,key,value = quant_dequant_qkv(query,key,value)
                     # print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
                 core_attn_out = self.core_attention(
