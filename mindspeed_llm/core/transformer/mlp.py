@@ -96,9 +96,9 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
     ffn_hidden_size = self.config.ffn_hidden_size
     if self.config.gated_linear_unit:
         ffn_hidden_size *= 2
-    # print("reach linear in moe layer init")
-    # print(f"reach mlp linear_fc1 with mxfp_quant: True, shared_expert: {shared_expert}")
-    # print(f"submodules.linear_fc1: {submodules.linear_fc1}, type: {type(submodules.linear_fc1)}")
+    print("reach linear in moe layer init")
+    print(f"reach mlp linear_fc1 with mxfp_quant: True, shared_expert: {shared_expert}")
+    print(f"submodules.linear_fc1: {submodules.linear_fc1}, type: {type(submodules.linear_fc1)}")
 
     if shared_expert:
         self.linear_fc1 = build_module(
