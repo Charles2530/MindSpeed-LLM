@@ -504,10 +504,10 @@ def flash_attention_forward(
         output = output.transpose(0, 1)
     else:
         if not args.mla_fa_divide_qk:
-            from megatron.training.utils import print_rank_0
             from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
             custom_quant_type = 'bf16'
-            print_rank_0("reach dotproductattention")
+            # from megatron.training.utils import print_rank_0
+            # print_rank_0("reach dotproductattention")
             if custom_quant_type == 'mxfp8':
                 query,key,value = quant_dequant_qkv(query,key,value)
                 # import pdb;pdb.set_trace()
