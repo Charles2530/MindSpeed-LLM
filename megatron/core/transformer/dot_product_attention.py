@@ -3,6 +3,8 @@
 
 import math
 
+from megatron.training.utils import print_rank_0
+from mindspeed_llm.training.utils import print_rank0_by_args
 import torch
 from torch import Tensor
 
@@ -99,6 +101,7 @@ class DotProductAttention(MegatronModule):
     ):
         from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
         custom_quant_type = 'bf16'
+        print_rank_0("reach dotproductattention")
         if custom_quant_type == 'mxfp8':
             query,key,value = quant_dequant_qkv(query,key,value)
             # import pdb;pdb.set_trace()
