@@ -694,14 +694,9 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
         else:
             total_input = input
         from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
-        from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
-        custom_quant_type = 'hifp8'
-        if custom_quant_type == 'mxfp4':
-            output = mxfp_matmul(total_input,weight.t(),'fp4_e2m1').to(torch.bfloat16)
-        elif custom_quant_type == 'mxfp8':
-            output = mxfp_matmul(total_input,weight.t(),'fp8_e4m3').to(torch.bfloat16)
-        elif custom_quant_type == 'hifp8':
-            output = hifp_matmul(total_input,weight.t()).to(torch.bfloat16)
+        custom_quant_type = 'mxfp8'
+        if custom_quant_type == 'mxfp8':
+            output = mxfp_matmul(total_input,weight.t()).to(torch.bfloat16)
         else:
             output = torch.matmul(total_input, weight.t())
         
@@ -742,14 +737,9 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
             else:
                 total_input = input
         from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
-        from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
-        custom_quant_type = 'hifp8'
-        if custom_quant_type == 'mxfp4':
-            grad_input = mxfp_matmul(grad_output,weight,'fp4_e2m1').to(torch.bfloat16)
-        elif custom_quant_type == 'mxfp8':
-            grad_input = mxfp_matmul(grad_output,weight,'fp8_e5m2').to(torch.bfloat16)
-        elif custom_quant_type == 'hifp8':
-            grad_input = hifp_matmul(grad_output,weight).to(torch.bfloat16)
+        custom_quant_type = 'mxfp8'
+        if custom_quant_type == 'mxfp8':
+            grad_input = mxfp_matmul(grad_output,weight).to(torch.bfloat16)
         else:
             grad_input = grad_output.matmul(weight)
         
@@ -819,15 +809,10 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
                 grad_weight = None
         else:
             grad_weight = None
-            from quant.mxfp_npu import mxfp_matmul
-            from quant.hifp_npu import hifp_matmul
-            custom_quant_type = 'hifp8'
-            if custom_quant_type == 'mxfp4':
-                grad_weight = mxfp_matmul(grad_output.t(),total_input,'fp4_e2m1').to(torch.bfloat16)
-            elif custom_quant_type == 'mxfp8':
-                grad_weight = mxfp_matmul(grad_output.t(),total_input,'fp8_e5m2').to(torch.bfloat16)
-            elif custom_quant_type == 'hifp8':
-                grad_weight = hifp_matmul(grad_output.t(),total_input).to(torch.bfloat16)
+            from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
+            custom_quant_type = 'mxfp8'
+            if custom_quant_type == 'mxfp8':
+                grad_weight = mxfp_matmul(grad_output.t(),total_input).to(torch.bfloat16)
             else:
                 grad_weight = grad_output.t().matmul(total_input)
         grad_bias = grad_output.sum(dim=0) if use_bias else None

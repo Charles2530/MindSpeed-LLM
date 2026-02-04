@@ -9,7 +9,7 @@ NNODES=1
 NODE_RANK=0
 WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
 
-CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
+CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/llama31_quant"
 DATA_PATH="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
 TOKENIZER_MODEL="/afs-c-mtc/gongruihao/Meta-Llama-3.1-8B"
 CKPT_LOAD_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/llama31-mcore/"
@@ -97,6 +97,6 @@ torchrun $DISTRIBUTED_ARGS pretrain_gpt.py \
     $DATA_ARGS \
     $OUTPUT_ARGS \
     --distributed-backend nccl \
-    --load ${CKPT_LOAD_DIR} \
+    --load ${CKPT_SAVE_DIR} \
     --save ${CKPT_SAVE_DIR} \
     | tee logs/train_llama31_8b_opt_$(date +"%Y%m%d_%H%M%S").log

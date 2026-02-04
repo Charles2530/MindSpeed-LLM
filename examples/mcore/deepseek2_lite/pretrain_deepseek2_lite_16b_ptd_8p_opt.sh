@@ -1,7 +1,10 @@
 #!bmples/mcore/deepseek2_lite/pretrain_deepseek2_lite_16b_ptd_8p.shin/bash
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
-
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+    megatron/core/tensor_parallel/layers.py
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+    megatron/core/transformer/dot_product_attention.py
 NPUS_PER_NODE=8
 MASTER_ADDR=localhost
 MASTER_PORT=6000
@@ -9,10 +12,10 @@ NNODES=1
 NODE_RANK=0
 WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
 
-CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt"
+CKPT_SAVE_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/dpsk_quant"
 DATA_PATH="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/dataset/enwiki_text_document"
 TOKENIZER_MODEL="/afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite"
-CKPT_LOAD_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/deepseek2_lite_mcore"
+# CKPT_LOAD_DIR="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/model_weights/deepseek2_lite_mcore"
 
 TP=1
 PP=1
@@ -68,7 +71,7 @@ ROPE_ARGS="
 GPT_ARGS="
     --shape-order BNSD \
     --reuse-fp32-param \
-    --load $CKPT_LOAD_DIR \
+    --load $CKPT_SAVE_DIR \
     --use-distributed-optimizer \
     --use-flash-attn \
     --use-mcore-models \
