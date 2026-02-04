@@ -92,7 +92,7 @@ class MLP(MegatronModule):
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
-            mxfp_quant=True,
+            # mxfp_quant=True,
         )
 
     def forward(self, hidden_states):
@@ -129,10 +129,10 @@ class MLP(MegatronModule):
                 intermediate_parallel = self.activation_func(intermediate_parallel)
 
         # [s, b, h]
-        custom_quant_type = 'bf16'
-        if custom_quant_type == 'mxfp8':
-            from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_tensor
-            intermediate_parallel = quant_dequant_tensor(intermediate_parallel)
+        # custom_quant_type = 'bf16'
+        # if custom_quant_type == 'mxfp8':
+        #     from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_tensor
+        #     intermediate_parallel = quant_dequant_tensor(intermediate_parallel)
             # import pdb;pdb.set_trace()
         output, output_bias = self.linear_fc2(intermediate_parallel)
 

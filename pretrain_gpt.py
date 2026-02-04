@@ -87,6 +87,8 @@ def model_provider(pre_process=True, post_process=True) -> Union[GPTModel, megat
             seq_len_interpolation_factor=args.rotary_seq_len_interpolation_factor,
             mtp_block_spec=mtp_block_spec,
         )
+        if torch.distributed.get_rank() == 0:
+            import pdb;pdb.set_trace()
         print_rank_0(model)
         print_rank_0(type(model))
     else:
