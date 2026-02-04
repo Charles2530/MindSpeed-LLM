@@ -5,8 +5,6 @@ CUSTOM_QUANT_TYPE=${CUSTOM_QUANT_TYPE:-bf16}
 sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     megatron/core/tensor_parallel/layers.py
 sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
-    megatron/core/transformer/dot_product_attention.py
-sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     mindspeed_llm/tasks/models/transformer/multi_head_latent_attention.py
 
 NPUS_PER_NODE=8

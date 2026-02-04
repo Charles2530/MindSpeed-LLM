@@ -1,10 +1,14 @@
 #!/bin/bash
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1
-sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+
+# custom_quant_type: 'bf16' = no fake quant, 'mxfp8' = enable (default mxfp8 for opt script)
+CUSTOM_QUANT_TYPE=${CUSTOM_QUANT_TYPE:-mxfp8}
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     megatron/core/tensor_parallel/layers.py
-sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     megatron/core/transformer/dot_product_attention.py
+
 NPUS_PER_NODE=8
 MASTER_ADDR=localhost
 MASTER_PORT=6000
@@ -80,6 +84,7 @@ GPT_ARGS="
     --no-gradient-accumulation-fusion \
     --no-load-optim \
     --no-load-rng \
+    --mlp-mxfp-quant \
     --bf16
 "
 

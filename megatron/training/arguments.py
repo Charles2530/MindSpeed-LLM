@@ -1793,5 +1793,8 @@ def _add_experimental_args(parser):
                        'pattern')
     group.add_argument('--yaml-cfg', type=str, default=None,
                        help = 'Config file to add additional arguments')
+    group.add_argument('--mlp-mxfp-quant', action='store_true',
+                       help='Enable mxfp fake quant for megatron MLP linear_fc1/fc2 (e.g. Llama31). '
+                            'Default False so DeepSeek layer-0 dense MLP is not quantized.')
 
     return parser

@@ -149,35 +149,6 @@ class DotProductAttention(MegatronModule):
 
         # Raw attention scores. [b * np, sq, sk]
         # forward
-        # import pdb;pdb.set_trace()
-        # from quant.mxfp_npu import mxfp_baddbmm
-        # from quant.hifp_npu import hifp_baddbmm
-        # custom_quant_type = 'bf16'
-        # if custom_quant_type == 'mxfp4':
-        #     matmul_result = mxfp_baddbmm(
-        #         matmul_input_buffer,
-        #         query.transpose(0, 1),  # [b * np, sq, hn]
-        #         key.transpose(0, 1).transpose(1, 2),  # [b * np, hn, sk]
-        #         beta=0.0,
-        #         alpha=self.softmax_scale,
-        #     )
-        # elif custom_quant_type == 'mxfp8':
-        #     matmul_result = mxfp_baddbmm(
-        #         matmul_input_buffer,
-        #         query.transpose(0, 1),  # [b * np, sq, hn]
-        #         key.transpose(0, 1).transpose(1, 2),  # [b * np, hn, sk]
-        #         beta=0.0,
-        #         alpha=self.softmax_scale,
-        #     )
-        # elif custom_quant_type == 'hifp8':
-        #     matmul_result = hifp_baddbmm(
-        #         matmul_input_buffer,
-        #         query.transpose(0, 1),  # [b * np, sq, hn]
-        #         key.transpose(0, 1).transpose(1, 2),  # [b * np, hn, sk]
-        #         beta=0.0,
-        #         alpha=self.softmax_scale,
-        #     )
-        # else:
         matmul_result = torch.baddbmm(
             matmul_input_buffer,
             query.transpose(0, 1),  # [b * np, sq, hn]
@@ -226,16 +197,6 @@ class DotProductAttention(MegatronModule):
         attention_probs = attention_probs.view(output_size[0] * output_size[1], output_size[2], -1)
 
         # matmul: [b * np, sq, hn]
-        # from quant.mxfp_npu import mxfp_matmul
-        # from quant.hifp_npu import hifp_matmul
-        # custom_quant_type = 'bf16'
-        # if custom_quant_type == 'hifp8':
-        #     context = hifp_matmul(attention_probs, value.transpose(0, 1))
-        # elif custom_quant_type == 'mxfp8':
-        #     context = mxfp_matmul(attention_probs, value.transpose(0, 1), 'fp8_e4m3')
-        # elif custom_quant_type == 'mxfp4':
-        #     context = mxfp_matmul(attention_probs, value.transpose(0, 1), 'fp4_e2m1')
-        # else:
         context = torch.bmm(attention_probs, value.transpose(0, 1))
 
         # change view [b, np, sq, hn]
