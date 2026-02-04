@@ -96,8 +96,8 @@ GPT_ARGS="
     --global-batch-size 64 \
     --make-vocab-size-divisible-by 1 \
     --lr 2e-5 \
-    --train-iters 462240 \
-    --lr-decay-iters 462240 \
+    --train-iters 20000 \
+    --lr-decay-iters 20000 \
     --lr-decay-style cosine \
     --untie-embeddings-and-output-weights \
     --disable-bias-linear \
