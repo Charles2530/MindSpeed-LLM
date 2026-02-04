@@ -137,8 +137,9 @@ DATA_ARGS="
 
 OUTPUT_ARGS="
     --log-interval 1 \
-    --save-interval 1000 \
-    --eval-interval 10000 \
+    --save-interval 100 \
+    --max-checkpoints 2 \
+    --eval-interval 1000 \
     --eval-iters 10 \
     --no-save-optim \
     --no-save-rng

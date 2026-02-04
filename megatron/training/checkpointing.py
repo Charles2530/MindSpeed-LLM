@@ -5,6 +5,8 @@
 from logging import getLogger
 import os
 import random
+import re
+import shutil
 import sys
 import numpy as np
 from time import time
@@ -203,6 +205,31 @@ def get_checkpoint_tracker_filename(checkpoints_path):
     return os.path.join(checkpoints_path, 'latest_checkpointed_iteration.txt')
 
 
+def _remove_old_checkpoints(checkpoints_path, max_keep):
+    """Remove old checkpoints, keeping only the max_keep most recent (by iteration).
+    Only rank 0 should call this when distributed. Works for both legacy and dist_ckpt formats."""
+    if checkpoints_path is None or not os.path.isdir(checkpoints_path) or max_keep is None or max_keep <= 0:
+        return
+    iter_dir_pattern = re.compile(r'^iter_(\d+)$')
+    entries = []
+    for name in os.listdir(checkpoints_path):
+        m = iter_dir_pattern.match(name)
+        if m:
+            full_path = os.path.join(checkpoints_path, name)
+            if os.path.isdir(full_path):
+                entries.append((int(m.group(1)), full_path))
+    if len(entries) <= max_keep:
+        return
+    # Sort by iteration descending (newest first), keep first max_keep, remove the rest
+    entries.sort(key=lambda x: x[0], reverse=True)
+    for _iter, path in entries[max_keep:]:
+        try:
+            shutil.rmtree(path)
+            print_rank_0('  removed old checkpoint: {} (iter {})'.format(path, _iter))
+        except OSError as e:
+            print_rank_0('  warning: failed to remove old checkpoint {}: {}'.format(path, e))
+
+
 def checkpoint_exists(checkpoints_path):
     if checkpoints_path is None:
         return False
@@ -292,7 +319,7 @@ def save_checkpoint(iteration, model, optimizer, opt_param_scheduler, num_floati
     Checkpointing context is used to persist some checkpointing state
     throughout a single job. Must be initialized externally (not used if None).
     """
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     start_ckpt = time()
     args = get_args()
 
@@ -393,6 +420,8 @@ def save_checkpoint(iteration, model, optimizer, opt_param_scheduler, num_floati
                 f.write(str(iteration))
             print_rank_0('  successfully saved checkpoint from iteration {:7d} to {}'
                          .format(iteration, args.save))
+            if getattr(args, 'max_checkpoints', None) is not None and args.max_checkpoints > 0:
+                _remove_old_checkpoints(args.save, args.max_checkpoints)
             if args.log_progress and args.async_save:
                 append_to_progress_log(f'Saved async checkpoint\tIteration: {iteration}',
                                        barrier=False)
