@@ -96,9 +96,9 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
     ffn_hidden_size = self.config.ffn_hidden_size
     if self.config.gated_linear_unit:
         ffn_hidden_size *= 2
-    print("reach linear in moe layer init")
-    print(f"reach mlp linear_fc1 with mxfp_quant: True, shared_expert: {shared_expert}")
-    print(f"submodules.linear_fc1: {submodules.linear_fc1}, type: {type(submodules.linear_fc1)}")
+    # When mindspeed_llm is used, this core_mlp_init replaces megatron MLP.__init__ for ALL MLPs
+    # (DeepSeek layer-0 dense + MoE experts/shared). Use --mlp-mxfp-quant only for Llama; default False for DeepSeek.
+    _mlp_mxfp_quant = getattr(_args, 'mlp_mxfp_quant', False)
 
     if shared_expert:
         self.linear_fc1 = build_module(
@@ -113,10 +113,9 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
             shared_expert=shared_expert,
-            # mxfp_quant=False,
+            mxfp_quant=_mlp_mxfp_quant,
         )
     else:
-
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
             self.input_size,
@@ -128,11 +127,10 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
-            # mxfp_quant=False,
+            mxfp_quant=_mlp_mxfp_quant,
         )
 
     self.activation_func = self.config.activation_func
-    # print(f"reach mlp linear_fc2 with mxfp_quant: True, shared_expert: {shared_expert}")
 
     if shared_expert:
         self.linear_fc2 = build_module(
@@ -147,10 +145,9 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
             shared_expert=shared_expert,
-            # mxfp_quant=True,
+            mxfp_quant=_mlp_mxfp_quant,
         )
     else:
-
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
             self.config.ffn_hidden_size,
@@ -162,7 +159,7 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
-            # mxfp_quant=True,
+            mxfp_quant=_mlp_mxfp_quant,
         )
 
     self.shared_expert = shared_expert
