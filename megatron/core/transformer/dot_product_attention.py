@@ -4,7 +4,6 @@
 import math
 
 from megatron.training.utils import print_rank_0
-from mindspeed_llm.training.utils import print_rank0_by_args
 import torch
 from torch import Tensor
 
