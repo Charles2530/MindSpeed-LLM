@@ -854,7 +854,10 @@ def load_checkpoint(model, optimizer, opt_param_scheduler, load_arg='load', stri
         args.consumed_valid_samples = getattr(checkpoint_args,
                                               'consumed_valid_samples', 0)
     else:
-        print_rank_0('could not find arguments in the checkpoint ...')
+        if args.finetune:
+            print_rank_0('Finetune mode: not loading arguments from checkpoint (iteration reset to 0).')
+        else:
+            print_rank_0('could not find arguments in the checkpoint ...')
 
     # [ModelOpt]: loading modelopt_state (sharded or not)
     if has_nvidia_modelopt:

@@ -55,7 +55,6 @@ GPT_ARGS="
     --num-attention-heads 16 \
     --tokenizer-type PretrainedFromHF  \
     --tokenizer-name-or-path ${TOKENIZER_MODEL} \
-    --finetune \
     --num-workers 8 \
     --seq-length 4096 \
     --max-position-embeddings 163840 \
