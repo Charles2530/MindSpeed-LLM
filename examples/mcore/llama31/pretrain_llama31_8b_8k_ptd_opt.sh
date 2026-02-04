@@ -85,7 +85,7 @@ GPT_ARGS="
 
 DATA_ARGS="
     --data-path $DATA_PATH \
-    --split 100,0,0
+    --split 99,1,0
 "
 
 OUTPUT_ARGS="

@@ -167,7 +167,7 @@ class MultiHeadLatentAttention(SelfAttention):
 
         if not self.mla_mm_split:
             from megatron.training.utils import print_rank_0
-            print_rank_0("reach multi_head_latent_attention linear_kvb with mxfp_quant: True")
+            # print_rank_0("reach multi_head_latent_attention linear_kvb with mxfp_quant: True")
             self.linear_kvb = build_module(
                 submodules.linear_kvb,
                 self.kv_lora_rank,
@@ -207,7 +207,7 @@ class MultiHeadLatentAttention(SelfAttention):
                 tp_comm_buffer_name="v",
             )
         from megatron.training.utils import print_rank_0
-        print_rank_0("reach multi_head_latent_attention linear_proj")
+        # print_rank_0("reach multi_head_latent_attention linear_proj")
         self.linear_proj = build_module(
             submodules.linear_proj,
             query_projection_size,
@@ -380,8 +380,8 @@ class MultiHeadLatentAttention(SelfAttention):
 
             # Fake-quant Q/K/V right before core attention.
             # (Use STE-style quant-dequant; see fake_quant_ops/quant_npu/mxfp_npu.py: quant_dequant_qkv)
-            from megatron.training.utils import print_rank_0
-            print_rank_0("reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
+            # from megatron.training.utils import print_rank_0
+            # print_rank_0("reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
             custom_quant_type = 'mxfp8'
             if custom_quant_type == 'mxfp8':
                 from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
