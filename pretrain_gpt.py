@@ -87,8 +87,13 @@ def model_provider(pre_process=True, post_process=True) -> Union[GPTModel, megat
             seq_len_interpolation_factor=args.rotary_seq_len_interpolation_factor,
             mtp_block_spec=mtp_block_spec,
         )
-        if torch.distributed.get_rank() == 0:
-            import pdb;pdb.set_trace()
+        print_rank_0("Model structure (name -> type), recursive full tree:")
+        for name, module in model.named_modules():
+            depth = name.count(".") if name else 0
+            indent = "  " * depth
+            display_name = name or "(root)"
+            type_str = f"{type(module).__module__}.{type(module).__name__}"
+            print_rank_0(f"{indent}{display_name}: {type_str}")
         print_rank_0(model)
         print_rank_0(type(model))
     else:
