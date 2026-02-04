@@ -98,12 +98,7 @@ class DotProductAttention(MegatronModule):
         attn_mask_type: AttnMaskType = None,
         packed_seq_params: PackedSeqParams = None,
     ):
-        from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
-        custom_quant_type = 'bf16'
-        print_rank_0("reach dotproductattention")
-        if custom_quant_type == 'mxfp8':
-            query,key,value = quant_dequant_qkv(query,key,value)
-            # import pdb;pdb.set_trace()
+        
         assert packed_seq_params is None, (
             "Packed sequence is not supported by DotProductAttention."
             "Please use TEDotProductAttention instead."
