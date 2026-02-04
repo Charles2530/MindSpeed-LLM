@@ -452,7 +452,8 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
 
     # Turn on training mode which enables dropout.
     print_rank_0("Model structure (name -> type), recursive full tree:")
-    for name, module in model.named_modules():
+    model_for_tree = model[0] if isinstance(model, list) else model
+    for name, module in model_for_tree.named_modules():
         depth = name.count(".") if name else 0
         indent = "  " * depth
         display_name = name or "(root)"
