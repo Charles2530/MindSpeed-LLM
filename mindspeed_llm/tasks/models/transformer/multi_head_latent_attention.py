@@ -382,7 +382,7 @@ class MultiHeadLatentAttention(SelfAttention):
             # (Use STE-style quant-dequant; see fake_quant_ops/quant_npu/mxfp_npu.py: quant_dequant_qkv)
             # from megatron.training.utils import print_rank_0
             # print_rank_0("reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
-            custom_quant_type = 'mxfp8'
+            custom_quant_type = 'bf16'
             if custom_quant_type == 'mxfp8':
                 from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
                 query, key, value = quant_dequant_qkv(query, key, value)
