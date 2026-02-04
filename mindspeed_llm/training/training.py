@@ -451,6 +451,13 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
     write_args_to_tensorboard()
 
     # Turn on training mode which enables dropout.
+    print_rank_0("Model structure (name -> type), recursive full tree:")
+    for name, module in model.named_modules():
+        depth = name.count(".") if name else 0
+        indent = "  " * depth
+        display_name = name or "(root)"
+        type_str = f"{type(module).__module__}.{type(module).__name__}"
+        print_rank_0(f"{indent}{display_name}: {type_str}")
     print_rank_0(f"model: {model}")
     # import pdb;pdb.set_trace()
     for model_module in model:
