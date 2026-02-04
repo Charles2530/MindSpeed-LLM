@@ -166,6 +166,8 @@ class MultiHeadLatentAttention(SelfAttention):
             self.k_layernorm = None
 
         if not self.mla_mm_split:
+            from megatron.training.utils import print_rank_0
+            print_rank_0("reach multi_head_latent_attention linear_kvb with mxfp_quant: True")
             self.linear_kvb = build_module(
                 submodules.linear_kvb,
                 self.kv_lora_rank,
@@ -177,6 +179,7 @@ class MultiHeadLatentAttention(SelfAttention):
                 skip_bias_add=False,
                 is_expert=False,
                 tp_comm_buffer_name="kvb",
+                mxfp_quant=True,
             )
         else:
             self.linear_kv_nope = build_module(
@@ -203,7 +206,8 @@ class MultiHeadLatentAttention(SelfAttention):
                 is_expert=False,
                 tp_comm_buffer_name="v",
             )
-
+        from megatron.training.utils import print_rank_0
+        print_rank_0("reach multi_head_latent_attention linear_proj")
         self.linear_proj = build_module(
             submodules.linear_proj,
             query_projection_size,
@@ -215,6 +219,7 @@ class MultiHeadLatentAttention(SelfAttention):
             skip_bias_add=True,
             is_expert=False,
             tp_comm_buffer_name="proj",
+            mxfp_quant=True,
         )
         # hook async A2A launcher inside mla forward when TP > 1.
         # a2a should be launched after TP communication finished to avoid bandwidth compete.
@@ -372,6 +377,16 @@ class MultiHeadLatentAttention(SelfAttention):
             # ==================================
             attn_mask_type = AttnMaskType.causal
             # print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
+
+            # Fake-quant Q/K/V right before core attention.
+            # (Use STE-style quant-dequant; see fake_quant_ops/quant_npu/mxfp_npu.py: quant_dequant_qkv)
+            from megatron.training.utils import print_rank_0
+            print_rank_0("reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
+            custom_quant_type = 'mxfp8'
+            if custom_quant_type == 'mxfp8':
+                from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
+                query, key, value = quant_dequant_qkv(query, key, value)
+
             if self.checkpoint_core_attention and self.training:
                 core_attn_out = self._checkpointed_attention_forward(
                     query,
@@ -382,11 +397,6 @@ class MultiHeadLatentAttention(SelfAttention):
                     packed_seq_params=packed_seq_params,
                 )
             else:
-                custom_quant_type = 'bf16'
-                if custom_quant_type == 'mxfp8':
-                    from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
-                    query,key,value = quant_dequant_qkv(query,key,value)
-                    # print(f"reach core_attention computation, query: {query.shape}, key: {key.shape}, value: {value.shape}, {self.checkpoint_core_attention and self.training}")
                 core_attn_out = self.core_attention(
                     query,
                     key,

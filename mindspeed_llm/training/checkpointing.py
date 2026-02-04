@@ -27,7 +27,8 @@ from megatron.training.utils import print_rank_0, unwrap_model, append_to_progre
 from megatron.training.async_utils import schedule_async_save
 from megatron.training.checkpointing import (_load_base_checkpoint, get_rng_state, get_checkpoint_name,
                                              get_distributed_optimizer_checkpoint_name,
-                                             ensure_directory_exists, generate_state_dict, get_checkpoint_tracker_filename)
+                                             ensure_directory_exists, generate_state_dict, get_checkpoint_tracker_filename,
+                                             _remove_old_checkpoints)
 from megatron.training.one_logger_utils import on_save_checkpoint_start, on_save_checkpoint_success
 from megatron.training.checkpointing import read_metadata
 from megatron.training.checkpointing import find_checkpoint_rank_0
@@ -351,6 +352,8 @@ def save_checkpoint_wrapper(fn):
                     f.write(str(iteration))
                 print_rank_0('  successfully saved checkpoint from iteration {:7d} to {}'
                              .format(iteration, args.save))
+                if getattr(args, 'max_checkpoints', None) is not None and args.max_checkpoints > 0:
+                    _remove_old_checkpoints(args.save, args.max_checkpoints)
                 if args.log_progress and args.async_save:
                     append_to_progress_log(f'Saved async checkpoint\tIteration: {iteration}',
                                            barrier=False)

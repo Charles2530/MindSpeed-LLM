@@ -1,10 +1,14 @@
 #!bmples/mcore/deepseek2_lite/pretrain_deepseek2_lite_16b_ptd_8p.shin/bash
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
-sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+CUSTOM_QUANT_TYPE=${CUSTOM_QUANT_TYPE:-mxfp8}
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     megatron/core/tensor_parallel/layers.py
-sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'mxfp8'/" \
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     megatron/core/transformer/dot_product_attention.py
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
+    mindspeed_llm/tasks/models/transformer/multi_head_latent_attention.py
+    
 NPUS_PER_NODE=8
 MASTER_ADDR=localhost
 MASTER_PORT=6000
