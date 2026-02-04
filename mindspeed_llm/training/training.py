@@ -457,7 +457,14 @@ def train(forward_step_func, model, optimizer, opt_param_scheduler,
         depth = name.count(".") if name else 0
         indent = "  " * depth
         display_name = name or "(root)"
-        type_str = f"{type(module).__module__}.{type(module).__name__}"
+        cls = type(module)
+        type_str = f"{cls.__module__}.{cls.__qualname__}"
+        bases = getattr(cls, "__bases__", ())
+        if bases and bases != (object,) and len(bases) >= 1:
+            base = bases[0]
+            base_str = f"{getattr(base, '__module__', '')}.{getattr(base, '__qualname__', base.__name__)}"
+            if base_str.strip(".") and "object" not in base_str:
+                type_str += f" (extends {base_str})"
         print_rank_0(f"{indent}{display_name}: {type_str}")
     print_rank_0(f"model: {model}")
     # import pdb;pdb.set_trace()
