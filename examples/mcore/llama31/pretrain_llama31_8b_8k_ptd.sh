@@ -1,7 +1,10 @@
 #!/bin/bash
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1
-
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'bf16'/" \
+    megatron/core/tensor_parallel/layers.py
+sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'bf16'/" \
+    megatron/core/transformer/dot_product_attention.py
 NPUS_PER_NODE=8
 MASTER_ADDR=localhost
 MASTER_PORT=6000
