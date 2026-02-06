@@ -113,8 +113,10 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
             shared_expert=shared_expert,
-            mxfp_quant=_mlp_mxfp_quant,
+            # mxfp_quant=_mlp_mxfp_quant,
         )
+        if hasattr(self.linear_fc1, 'mxfp_quant'):
+            self.linear_fc1.mxfp_quant = _mlp_mxfp_quant
     else:
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
@@ -127,8 +129,10 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
-            mxfp_quant=_mlp_mxfp_quant,
+            # mxfp_quant=_mlp_mxfp_quant,
         )
+        if hasattr(self.linear_fc1, 'mxfp_quant'):
+            self.linear_fc1.mxfp_quant = _mlp_mxfp_quant
 
     self.activation_func = self.config.activation_func
 
@@ -145,8 +149,10 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
             shared_expert=shared_expert,
-            mxfp_quant=_mlp_mxfp_quant,
+            # mxfp_quant=_mlp_mxfp_quant,
         )
+        if hasattr(self.linear_fc2, 'mxfp_quant'):
+            self.linear_fc2.mxfp_quant = _mlp_mxfp_quant
     else:
         self.linear_fc2 = build_module(
             submodules.linear_fc2,
@@ -159,8 +165,10 @@ def core_mlp_init(self, config, submodules, is_expert=False, input_size=None, sh
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
-            mxfp_quant=_mlp_mxfp_quant,
+            # mxfp_quant=_mlp_mxfp_quant,
         )
+        if hasattr(self.linear_fc2, 'mxfp_quant'):
+            self.linear_fc2.mxfp_quant = _mlp_mxfp_quant
 
     self.shared_expert = shared_expert
 
