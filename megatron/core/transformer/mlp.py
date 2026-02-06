@@ -63,14 +63,7 @@ class MLP(MegatronModule):
         ffn_hidden_size = self.config.ffn_hidden_size
         if self.config.gated_linear_unit:
             ffn_hidden_size *= 2
-        # MLP mxfp quant: enable only when --mlp-mxfp-quant (e.g. Llama31); DeepSeek layer-0 uses same MLP, keep False by default
-        try:
-            from megatron.training import get_args
-            _mlp_mxfp_quant = getattr(get_args(), 'mlp_mxfp_quant', False)
-        except Exception:
-            _mlp_mxfp_quant = False
-        from megatron.training.utils import print_rank_0
-        print_rank_0(f"reach mlp linear_fc1 and linear_fc2 with mxfp_quant: {_mlp_mxfp_quant}")
+
         self.linear_fc1 = build_module(
             submodules.linear_fc1,
             self.input_size,
@@ -82,7 +75,6 @@ class MLP(MegatronModule):
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc1',
-            mxfp_quant=_mlp_mxfp_quant,
         )
 
         self.activation_func = self.config.activation_func
@@ -98,7 +90,6 @@ class MLP(MegatronModule):
             skip_bias_add=True,
             is_expert=is_expert,
             tp_comm_buffer_name='fc2',
-            mxfp_quant=_mlp_mxfp_quant,
         )
 
     def forward(self, hidden_states):
