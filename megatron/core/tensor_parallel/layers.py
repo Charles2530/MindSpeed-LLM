@@ -697,6 +697,11 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
             output = mxfp_matmul(total_input,weight.t()).to(torch.bfloat16)
+        elif custom_quant_type == 'mxfp4':
+            output = mxfp_matmul(total_input,weight.t(),'mxfp4').to(torch.bfloat16)
+        elif custom_quant_type == 'mxfp4_auto':
+            from fake_quant_ops.quant.operators import quant_matmul
+            output = quant_matmul(total_input,weight.t(),'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
         else:
             output = torch.matmul(total_input, weight.t())
         
@@ -740,6 +745,11 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
             grad_input = mxfp_matmul(grad_output,weight).to(torch.bfloat16)
+        elif custom_quant_type == 'mxfp4':
+            grad_input = mxfp_matmul(grad_output,weight,'mxfp4e2m1').to(torch.bfloat16)
+        elif custom_quant_type == 'mxfp4_auto':
+            from fake_quant_ops.quant.operators import quant_matmul
+            grad_input = quant_matmul(grad_output,weight,'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
         else:
             grad_input = grad_output.matmul(weight)
         
@@ -813,6 +823,11 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
             custom_quant_type = 'bf16'
             if custom_quant_type == 'mxfp8':
                 grad_weight = mxfp_matmul(grad_output.t(),total_input).to(torch.bfloat16)
+            elif custom_quant_type == 'mxfp4':
+                grad_weight = mxfp_matmul(grad_output.t(),total_input,'mxfp4e2m1').to(torch.bfloat16)
+            elif custom_quant_type == 'mxfp4_auto':
+                from fake_quant_ops.quant.operators import quant_matmul
+                grad_weight = quant_matmul(grad_output.t(),total_input,'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
             else:
                 grad_weight = grad_output.t().matmul(total_input)
         grad_bias = grad_output.sum(dim=0) if use_bias else None

@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from functools import partial
+from operator import imod
 from typing import Optional, Tuple
 
 import torch
@@ -450,6 +451,12 @@ class TEGroupedMLP(MegatronModule):
             from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_tensor
             intermediate_parallel = quant_dequant_tensor(intermediate_parallel)
             # import pdb;pdb.set_trace()
+        elif custom_quant_type == 'mxfp4':
+            from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_tensor
+            intermediate_parallel = quant_dequant_tensor(intermediate_parallel, 'mxfp4')
+        elif custom_quant_type == 'mxfp4_auto':
+            from fake_quant_ops.quant.operators import quant_dequant_tensor_with_backward
+            intermediate_parallel = quant_dequant_tensor_with_backward(intermediate_parallel, forward_format='mxfp4_e2m1',minus_exp="auto",backward_quantize=True,backward_format='mxfp4_e2m1')
         output, output_bias = self.linear_fc2(intermediate_parallel, tokens_per_expert)
 
         return output, output_bias
