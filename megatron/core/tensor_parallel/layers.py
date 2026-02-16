@@ -746,7 +746,7 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
         if custom_quant_type == 'mxfp8':
             grad_input = mxfp_matmul(grad_output,weight).to(torch.bfloat16)
         elif custom_quant_type == 'mxfp4':
-            grad_input = mxfp_matmul(grad_output,weight,'mxfp4e2m1').to(torch.bfloat16)
+            grad_input = mxfp_matmul(grad_output,weight,'mxfp4').to(torch.bfloat16)
         elif custom_quant_type == 'mxfp4_auto':
             from fake_quant_ops.quant.operators import quant_matmul
             grad_input = quant_matmul(grad_output,weight,'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
@@ -824,7 +824,7 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
             if custom_quant_type == 'mxfp8':
                 grad_weight = mxfp_matmul(grad_output.t(),total_input).to(torch.bfloat16)
             elif custom_quant_type == 'mxfp4':
-                grad_weight = mxfp_matmul(grad_output.t(),total_input,'mxfp4e2m1').to(torch.bfloat16)
+                grad_weight = mxfp_matmul(grad_output.t(),total_input,'mxfp4').to(torch.bfloat16)
             elif custom_quant_type == 'mxfp4_auto':
                 from fake_quant_ops.quant.operators import quant_matmul
                 grad_weight = quant_matmul(grad_output.t(),total_input,'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
