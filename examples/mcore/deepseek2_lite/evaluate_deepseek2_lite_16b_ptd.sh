@@ -9,11 +9,11 @@ NNODES=1
 NODE_RANK=0
 
 # TASK="mmlu ceval bbh"
-TASK="hellaswag"
+TASK="cmmlu"
 CHECKPOINT="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/dpsk_bsline"
 TOKENIZER_PATH="/afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite"
 # DATA_PATH="./test/mmlu/data/test ./test/ceval/dev ./test/bbh/test"
-DATA_PATH="./test/hellaswag/"
+DATA_PATH="./test/cmmlu/test"
 
 TP=1
 PP=1
