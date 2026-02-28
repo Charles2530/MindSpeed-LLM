@@ -7,7 +7,7 @@ python convert_ckpt.py \
     --model-type GPT \
     --load-model-type mg \
     --save-model-type hf \
-    --target-tensor-parallel-size 8 \
+    --target-tensor-parallel-size 1 \
     --target-pipeline-parallel-size 1 \
     --load-dir /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/llama31_bsline/ \
     --save-dir /afs-c-mtc/gongruihao/Meta-Llama-3.1-8B  # 需要填入原始HF模型路径，新权重会存于./model_from_hf/llama31_hf/mg2hg/
