@@ -8,10 +8,11 @@ MASTER_PORT=6000
 NNODES=1
 NODE_RANK=0
 
-TASK="mmlu"
+# TASK="mmlu"
+TASK="ceval"
 CHECKPOINT="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/dpsk_bsline"
 TOKENIZER_PATH="/afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite"
-DATA_PATH="./mmlu/data/test/"
+DATA_PATH="./test/ceval/"
 
 TP=1
 PP=1
