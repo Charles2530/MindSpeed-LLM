@@ -2,20 +2,20 @@
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 
-NPUS_PER_NODE=1
+NPUS_PER_NODE=8
 MASTER_ADDR=localhost
 MASTER_PORT=6000
 NNODES=1
 NODE_RANK=0
 
 TASK="mmlu"
-CHECKPOINT="Your ckpt file path"
-TOKENIZER_PATH="Your vocab file path"
-DATA_PATH="Your data path (such as ./mmlu/test/)"
+CHECKPOINT="/afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/dpsk_bsline"
+TOKENIZER_PATH="/afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite"
+DATA_PATH="./mmlu/data/test/"
 
 TP=1
 PP=1
-EP=1
+EP=8
 
 DISTRIBUTED_ARGS="
     --nproc_per_node $NPUS_PER_NODE \
@@ -43,10 +43,10 @@ python -m torch.distributed.launch $DISTRIBUTED_ARGS evaluation.py \
     --num-attention-heads 16 \
     --tokenizer-type PretrainedFromHF  \
     --tokenizer-name-or-path "${TOKENIZER_PATH}" \
-    --seq-length 8192 \
+    --seq-length 4096 \
     --max-position-embeddings 163840 \
     --micro-batch-size 1 \
-    --global-batch-size 1 \
+    --global-batch-size 64 \
     --make-vocab-size-divisible-by 1 \
     --untie-embeddings-and-output-weights \
     --disable-bias-linear \
@@ -71,7 +71,7 @@ python -m torch.distributed.launch $DISTRIBUTED_ARGS evaluation.py \
     --qk-layernorm \
     --expert-model-parallel-size ${EP} \
     --moe-permutation-async-comm \
-    --moe-token-dispatcher-type allgather \
+    --moe-token-dispatcher-type alltoall \
     --first-k-dense-replace 1 \
     --moe-layer-freq 1 \
     --n-shared-experts 2 \

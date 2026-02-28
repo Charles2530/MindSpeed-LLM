@@ -11,7 +11,7 @@ python convert_ckpt.py \
     --params-dtype bf16 \
     --target-tensor-parallel-size 1 \
     --target-pipeline-parallel-size 1 \
-    --target-expert-parallel-size 1 \
+    --target-expert-parallel-size 8 \
     --spec mindspeed_llm.tasks.models.spec.deepseek_spec layer_spec \
-    --load-dir ./model_weights/deepseek2_lite_mcore/ \
-    --save-dir ./model/deepseek2_lite/
+    --load-dir /afs-c-mtc/gongruihao/deepseek_910b/MindSpeed-LLM/saved_ckpt/dpsk_bsline/ \
+    --save-dir /afs-c-mtc/gongruihao/deepseek_910b/DeepSeek-V2-Lite

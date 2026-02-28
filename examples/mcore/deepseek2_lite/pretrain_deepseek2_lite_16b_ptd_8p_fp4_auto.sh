@@ -9,10 +9,10 @@ sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'
 sed -i "s/^\([[:space:]]*custom_quant_type[[:space:]]*=[[:space:]]*\)'[^']*'/\1'${CUSTOM_QUANT_TYPE}'/" \
     mindspeed_llm/tasks/models/transformer/multi_head_latent_attention.py
 
-NPUS_PER_NODE=8
+NPUS_PER_NODE=16
 MASTER_ADDR=localhost
 MASTER_PORT=6000
-NNODES=$1
+NNODES=1
 NODE_RANK=0
 WORLD_SIZE=$(($NPUS_PER_NODE*$NNODES))
 
