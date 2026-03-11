@@ -386,6 +386,9 @@ class MultiHeadLatentAttention(SelfAttention):
             if custom_quant_type == 'mxfp8':
                 from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_qkv
                 query, key, value = quant_dequant_qkv(query, key, value)
+            elif custom_quant_type == 'hif8':
+                from fake_quant_ops.quant_npu.hifp_npu import quant_dequant_qkv
+                query, key, value = quant_dequant_qkv(query, key, value)
 
             if self.checkpoint_core_attention and self.training:
                 core_attn_out = self._checkpointed_attention_forward(

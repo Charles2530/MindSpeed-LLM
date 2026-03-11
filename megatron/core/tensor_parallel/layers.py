@@ -694,11 +694,14 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
         else:
             total_input = input
         from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
+        from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
             output = mxfp_matmul(total_input,weight.t()).to(torch.bfloat16)
         elif custom_quant_type == 'mxfp4':
             output = mxfp_matmul(total_input,weight.t(),'mxfp4').to(torch.bfloat16)
+        elif custom_quant_type == 'hif8':
+            output = hifp_matmul(total_input, weight.t()).to(torch.bfloat16)
         elif custom_quant_type == 'mxfp4_auto':
             from fake_quant_ops.quant.operators import quant_matmul
             output = quant_matmul(total_input,weight.t(),'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
@@ -742,11 +745,14 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
             else:
                 total_input = input
         from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
+        from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
         custom_quant_type = 'bf16'
         if custom_quant_type == 'mxfp8':
             grad_input = mxfp_matmul(grad_output,weight).to(torch.bfloat16)
         elif custom_quant_type == 'mxfp4':
             grad_input = mxfp_matmul(grad_output,weight,'mxfp4').to(torch.bfloat16)
+        elif custom_quant_type == 'hif8':
+            grad_input = hifp_matmul(grad_output, weight).to(torch.bfloat16)
         elif custom_quant_type == 'mxfp4_auto':
             from fake_quant_ops.quant.operators import quant_matmul
             grad_input = quant_matmul(grad_output,weight,'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")
@@ -820,11 +826,14 @@ class CustomLinearWithGradAccumulationAndAsyncCommunication(torch.autograd.Funct
         else:
             grad_weight = None
             from fake_quant_ops.quant_npu.mxfp_npu import mxfp_matmul
+            from fake_quant_ops.quant_npu.hifp_npu import hifp_matmul
             custom_quant_type = 'bf16'
             if custom_quant_type == 'mxfp8':
                 grad_weight = mxfp_matmul(grad_output.t(),total_input).to(torch.bfloat16)
             elif custom_quant_type == 'mxfp4':
                 grad_weight = mxfp_matmul(grad_output.t(),total_input,'mxfp4').to(torch.bfloat16)
+            elif custom_quant_type == 'hif8':
+                grad_weight = hifp_matmul(grad_output.t(), total_input).to(torch.bfloat16)
             elif custom_quant_type == 'mxfp4_auto':
                 from fake_quant_ops.quant.operators import quant_matmul
                 grad_weight = quant_matmul(grad_output.t(),total_input,'mxfp4_e2m1',True,'mxfp4_e2m1',minus_exp="auto")

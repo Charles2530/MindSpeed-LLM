@@ -454,6 +454,9 @@ class TEGroupedMLP(MegatronModule):
         elif custom_quant_type == 'mxfp4':
             from fake_quant_ops.quant_npu.mxfp_npu import quant_dequant_tensor
             intermediate_parallel = quant_dequant_tensor(intermediate_parallel, 'mxfp4')
+        elif custom_quant_type == 'hif8':
+            from fake_quant_ops.quant_npu.hifp_npu import quant_dequant_tensor
+            intermediate_parallel = quant_dequant_tensor(intermediate_parallel)
         elif custom_quant_type == 'mxfp4_auto':
             from fake_quant_ops.quant.operators import quant_dequant_tensor_with_backward
             intermediate_parallel = quant_dequant_tensor_with_backward(intermediate_parallel, forward_format='mxfp4_e2m1',minus_exp="auto",backward_quantize=True,backward_format='mxfp4_e2m1')
